@@ -9,7 +9,7 @@
 #define EPSILON 0.00000001
 
 struct component {
-	char type; // 'R' pentru rezistor, 'E' pentru
+	char type; // 'R' pentru rezistor, 'E' pentru sursa
 	double value;
 }; // Structura pentru fire
 
