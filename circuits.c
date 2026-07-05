@@ -9,9 +9,9 @@
 #define EPSILON 0.00000001
 
 struct component {
-	char type; // 'R' pentru rezistor, 'E' pentru sursa
+	char type; // 'R' for resistor, 'E' for voltage source
 	double value;
-}; // Structura pentru fire
+}; // Component structure
 
 struct wire {
 	int start_node;
@@ -19,11 +19,11 @@ struct wire {
 	double current;
 	int num_components;
 	struct component *components;
-	// Folosim pointer pentru a aloca dinamic componentele
+	// Pointer used for dynamic component allocation
 };
 
 void read_kirchoff_1(struct wire *wires, int w)
-{ // Functia pentru citirea datelor pentru legea 1
+{ // Reads the input data for the first law
 	for (int i = 1; i <= w; i++) {
 		scanf("%d", &wires[i].start_node);
 		scanf("%d", &wires[i].end_node);
@@ -32,19 +32,19 @@ void read_kirchoff_1(struct wire *wires, int w)
 }
 
 void read_kirchoff_2(struct wire *wires, int w, bool *valid)
-{ // Functia pentru citirea datelor pentru legea 2
+{ // Reads the input data for the second law
 	for (int i = 1; i <= w; i++) {
 		scanf("%d", &wires[i].start_node);
 		scanf("%d", &wires[i].end_node);
 		scanf("%lf", &wires[i].current);
 		scanf("%d", &wires[i].num_components);
 
-		// Alocam dinamic memoria pentru componente
+		// Dynamically allocate memory for the components
 		wires[i].components = (struct component *)
 		malloc(wires[i].num_components * sizeof(struct component));
 
 		if (!wires[i].components) {
-			printf("Eroare la alocarea memoriei pentru componente.\n");
+			printf("Memory allocation error for components.\n");
 			*valid = false;
 			return;
 		}
@@ -54,12 +54,12 @@ void read_kirchoff_2(struct wire *wires, int w, bool *valid)
 			scanf("%lf", &wires[i].components[j].value);
 			if (wires[i].components[j].type != 'R') {
 				if (wires[i].components[j].type != 'E') {
-					printf("Componenta dorita nu exista.\n");
+					printf("The requested component does not exist.\n");
 				}
 			}
 			if (wires[i].components[j].type == 'E') {
 				if (wires[i].components[j].value < 0) {
-					printf("Sursa de tensiune nu poate fi negativa.\n");
+					printf("The voltage source cannot be negative.\n");
 					*valid = false;
 				}
 			}
@@ -67,63 +67,63 @@ void read_kirchoff_2(struct wire *wires, int w, bool *valid)
 	}
 }
 
-// Functia pentru verificarea daca exista noduri deschise
+// Checks whether there are open nodes
 void check_open(struct wire *wires, int n, int w, bool *valid)
 {
 	int connections[NMAX] = {0};
 
-	// Inregistram nodurile drept capete ale fiecarui fir
+	// Register each wire endpoint as a node connection
 	for (int i = 1; i <= w; i++) {
 		connections[wires[i].start_node]++;
 		connections[wires[i].end_node]++;
 	}
 
-	// Verificam daca fiecare nod are o conexiune de inceput si sfarsit
+	// Check whether each node has enough connections
 	for (int i = 1; i <= n; i++) {
 		if (connections[i] < 2) {
-			printf("Circuitul este deschis in nodul %d.\n", i);
+			printf("The circuit is open at node %d.\n", i);
 			*valid = false;
 			return;
 		}
 	}
 }
 
-// Functia pentru verificarea Legii 1
+// Checks Kirchhoff's first law
 void check_kirchoff_1(struct wire *wires, int n, int w)
 {
-	//  Parcurgem fiecare nod pentru a verifica Legea 1
+	// Iterate through each node to check the first law
 	for (int node = 1; node <= n; node++) {
 		double incoming_current = 0.0;
 		double outgoing_current = 0.0;
 
-		// Parcurgem fiecare fir si calculam curentul de intrare si iesire
+		// Iterate through each wire and compute incoming and outgoing current
 		for (int i = 1; i <= w; i++) {
-			// Daca nodul este final, curentul este de intrare
+			// If the node is an endpoint, the current is incoming
 			if (wires[i].end_node == node) {
 				incoming_current += wires[i].current;
 			}
-			// Daca nodul e de inceput, curentul este de iesire
+			// If the node is a start point, the current is outgoing
 			if (wires[i].start_node == node) {
 				outgoing_current += wires[i].current;
 			}
 		}
 
-		// Verificam daca circuitul respecta legea
+		// Check whether the circuit satisfies the law
 		if (fabs(incoming_current - outgoing_current) > EPSILON) {
-			// Afisam rezultatele cu precizie de 9 zecimale
-			printf("Legea 1 a lui Kirchhoff nu se respecta pentru egalitatea "
-			"%.9lfA = %.9lfA in nodul %d.\n",
+			// Print the results with 9-digit decimal precision
+			printf("Kirchhoff's first law is not satisfied for equality "
+			"%.9lfA = %.9lfA at node %d.\n",
 			incoming_current, outgoing_current, node);
 
 			return;
 		}
 	}
 
-	// Daca toate nodurile respecta Legea 1
-	printf("Legea 1 a lui Kirchhoff se respecta pentru circuitul dat.\n");
+	// All nodes satisfy Kirchhoff's first law
+	printf("Kirchhoff's first law is satisfied for the given circuit.\n");
 }
 
-// Functia pentru verificarea Legii 2
+// Checks Kirchhoff's second law
 void check_kirchoff_2(struct wire *wires, int w)
 {
 	double voltage_drop_r = 0.0;
@@ -141,11 +141,11 @@ void check_kirchoff_2(struct wire *wires, int w)
 		}
 	}
 
-	// Verificam daca tensiunile sunt egale cu precizie epsilon
+	// Check whether the voltages are equal within epsilon precision
 	if (fabs(voltage_drop_e - voltage_drop_r) < EPSILON) {
-		printf("Legea a 2-a lui Kirchhoff se respecta pentru circuitul dat.\n");
+		printf("Kirchhoff's second law is satisfied for the given circuit.\n");
 	} else {
-		printf("Legea a 2-a lui Kirchhoff nu se respecta pentru egalitatea "
+		printf("Kirchhoff's second law is not satisfied for equality "
 		"%.9lfV = %.9lfV.\n", voltage_drop_r, voltage_drop_e);
 	}
 }
@@ -159,7 +159,7 @@ int main(void)
 	scanf("%d %d", &n, &w);
 
 	struct wire *wires = (struct wire *)malloc((w + 1) * sizeof(struct wire));
-	// Alocam memorie pentru fire
+	// Allocate memory for the wires
 
 	bool valid = true;
 
@@ -178,15 +178,15 @@ int main(void)
 			}
 		}
 	} else {
-		printf("Legile existente sunt doar Legea 1 si Legea a 2-a\n");
+		printf("The available laws are only Law 1 and Law 2.\n");
 	}
 
-	// Eliberam memoria pentru componentele fiecarui fir
+	// Free the memory allocated for each wire's components
 	for (int i = 1; i <= w; i++) {
 		free(wires[i].components);
 	}
 
-	// Eliberam memoria alocata pentru fire
+	// Free the memory allocated for wires
 	free(wires);
 
 	return 0;

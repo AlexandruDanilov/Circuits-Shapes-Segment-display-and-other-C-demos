@@ -1,16 +1,16 @@
 // Danilov Alexandru-Cristian, 315CA
 #include <stdio.h>
 
-// Normalizeaza unghiul in intervalul [0, 360)
+// Normalize the angle to the [0, 360) interval
 void normalize_angle(int *angle)
 {
 	*angle = (*angle % 360 + 360) % 360;
 }
 
-// Afiseaza un patrat de dimensiune `size` rotit cu un unghi `angle`
+// Print a square of size `size` rotated by `angle`
 void print_square(int size, int angle)
 {
-	normalize_angle(&angle); // Se normalizeaza unghiul
+	normalize_angle(&angle); // Normalize the angle
 
 	if (size <= 0) {
 		printf("Unsupported size to display shape\n");
@@ -21,14 +21,14 @@ void print_square(int size, int angle)
 		return;
 	}
 
-	if (angle % 90 == 0) { // Unghi 0 sau 180
+	if (angle % 90 == 0) { // Angle 0 or 180
 		for (int i = 0; i < size; i++) {
 			for (int j = 0; j < size; j++) {
 				printf("*");
 			}
 			printf("\n");
 		}
-	} else if (angle % 45 == 0) { // Unghi 45 sau 135
+	} else if (angle % 45 == 0) { // Angle 45 or 135
 		int spaces = size;
 		int stars = 1;
 
@@ -61,7 +61,7 @@ void print_square(int size, int angle)
 	}
 }
 
-// Afiseaza un dreptunghi cu latimea `width` si inaltimea `height`
+// Print a rectangle with width `width` and height `height`
 void print_rectangle(int width, int height)
 {
 	if (width <= 0 || height <= 0) {
@@ -76,7 +76,7 @@ void print_rectangle(int width, int height)
 	}
 }
 
-// Afiseaza un triunghi cu cateta `cathetus` și unghiul `angle`
+// Print a triangle with side `cathetus` and angle `angle`
 void print_triangle(int cathetus, int angle)
 {
 	normalize_angle(&angle);
@@ -91,7 +91,7 @@ void print_triangle(int cathetus, int angle)
 	}
 
 	switch (angle % 360) {
-	case 0: // Unghi 0
+	case 0: // Angle 0
 		for (int i = 1; i <= cathetus; i++) {
 			for (int j = 0; j < i; j++) {
 				printf("*");
@@ -99,7 +99,7 @@ void print_triangle(int cathetus, int angle)
 			printf("\n");
 		}
 		break;
-	case 90: // Unghi 90
+	case 90: // Angle 90
 		for (int i = cathetus; i > 0; i--) {
 			for (int j = 0; j < i; j++) {
 				printf("*");
@@ -107,7 +107,7 @@ void print_triangle(int cathetus, int angle)
 			printf("\n");
 		}
 		break;
-	case 180: // Unghi 180
+	case 180: // Angle 180
 		for (int i = cathetus; i > 0; i--) {
 			for (int j = 0; j < cathetus - i + 1; j++) {
 				printf(" ");
@@ -118,7 +118,7 @@ void print_triangle(int cathetus, int angle)
 			printf("\n");
 		}
 		break;
-	case 270: // Unghi 270
+	case 270: // Angle 270
 		for (int i = 1; i <= cathetus; i++) {
 			for (int j = 0; j < cathetus - i; j++) {
 				printf(" ");
@@ -131,7 +131,7 @@ void print_triangle(int cathetus, int angle)
 	}
 }
 
-// Afiseaza o cruce de dimensiune `size` rotita cu un unghi `angle`
+// Print a cross of size `size` rotated by `angle`
 void print_cross(int size, int angle)
 {
 	normalize_angle(&angle);
@@ -145,7 +145,7 @@ void print_cross(int size, int angle)
 		return;
 	}
 
-	if (angle % 90 == 0) { // Unghi 0 sau 180
+	if (angle % 90 == 0) { // Angle 0 or 180
 		int middle = size / 2;
 		for (int i = 0; i < size; i++) {
 			for (int j = 0; j < size; j++) {
@@ -157,7 +157,7 @@ void print_cross(int size, int angle)
 			}
 			printf("\n");
 		}
-	} else if (angle % 45 == 0) { // Unghi 45 sau 135
+	} else if (angle % 45 == 0) { // Angle 45 or 135
 		for (int i = 0; i < size; i++) {
 			for (int j = 0; j < size; j++) {
 				if (i == j || i + j == size - 1) {
@@ -171,7 +171,7 @@ void print_cross(int size, int angle)
 	}
 }
 
-// Afiseaza o fereastra de dimensiune `size`
+// Print a window of size `size`
 void print_window(int size)
 {
 	if (size <= 0 || size % 2 == 0) {
@@ -199,31 +199,31 @@ void print_window(int size)
 int main(void)
 {
 	int n;
-	scanf("%d", &n); // Citim numarul de forme
+	scanf("%d", &n); // Read the number of shapes
 	for (int i = 0; i < n; i++) {
 		char shape;
 		int size, width, height, angle;
 
-		scanf(" %c", &shape); // Citim forma
+		scanf(" %c", &shape); // Read the shape
 		switch (shape) {
-		case 'p': // patrat
+		case 'p': // square
 			scanf("%d %d", &size, &angle);
 			print_square(size, angle);
 			break;
-		case 'd': // dreptunghi
+		case 'd': // rectangle
 			scanf("%d %d", &width, &height);
 			print_rectangle(width, height);
 			break;
 
-		case 't': // triunghi
+		case 't': // triangle
 			scanf("%d %d", &size, &angle);
 			print_triangle(size, angle);
 			break;
-		case 'c': // cruce
+		case 'c': // cross
 			scanf("%d %d", &size, &angle);
 			print_cross(size, angle);
 			break;
-		case 'f': // fereastra
+		case 'f': // window
 			scanf("%d", &size);
 			print_window(size);
 			break;
@@ -232,7 +232,7 @@ int main(void)
 			break;
 		}
 		if (i < n - 1) {
-			printf("\n"); // Se lasa un rand liber intre forme
+			printf("\n"); // Leave a blank line between shapes
 		}
 	}
 	return 0;

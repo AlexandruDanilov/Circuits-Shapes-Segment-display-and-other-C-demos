@@ -4,7 +4,7 @@
 
 #define NMAX 1000
 
-// Atunci cand exista o eroare citeste pana la capat de rand
+// When an error occurs, read until the end of the line
 void clear_input_buffer(void)
 {
 	int c;
@@ -12,7 +12,7 @@ void clear_input_buffer(void)
 		;
 }
 
-// Initializeaza matricea cu 0
+// Initialize the matrix with 0
 void init_matrix(int n, int m, int display[][NMAX])
 {
 	for (int i = 0; i < n; i++) {
@@ -27,9 +27,9 @@ void print_matrix(int n, int m, int display[][NMAX])
 	for (int i = 0; i < n; i++) {
 		for (int j = 0; j < m; j++) {
 			if (display[i][j] == 0) {
-				printf("  "); // In loc de 0 afiseaza doua spatii
+				printf("  "); // Print two spaces instead of 0
 			} else {
-				printf("^ "); // In loc de 1 afiseaza ^ si spatiu
+				printf("^ "); // Print ^ and a space instead of 1
 			}
 		}
 		printf("\n");
@@ -38,7 +38,7 @@ void print_matrix(int n, int m, int display[][NMAX])
 
 void move_up(int display[][NMAX], int lines, int columns, long long steps)
 {
-	// Translateaza in sus
+	// Shift up
 	int aux[NMAX][NMAX];
 	steps = steps % lines;
 	for (int i = 0; i < lines; i++) {
@@ -57,7 +57,7 @@ void move_up(int display[][NMAX], int lines, int columns, long long steps)
 
 void move_down(int display[][NMAX], int lines, int columns, long long steps)
 {
-	// Translateaza in jos
+	// Shift down
 	int aux[NMAX][NMAX];
 	steps = steps % lines;
 
@@ -77,7 +77,7 @@ void move_down(int display[][NMAX], int lines, int columns, long long steps)
 
 void move_left(int display[][NMAX], int lines, int columns, long long steps)
 {
-	// Translateaza in stanga
+	// Shift left
 	int aux[NMAX][NMAX];
 	steps = steps % columns;
 
@@ -97,7 +97,7 @@ void move_left(int display[][NMAX], int lines, int columns, long long steps)
 
 void move_right(int display[][NMAX], int lines, int columns, long long steps)
 {
-	// Translateaza in dreapta
+	// Shift right
 	int aux[NMAX][NMAX];
 	steps = steps % columns;
 
@@ -130,14 +130,14 @@ void fill_digit(int digit, int display[][NMAX], int n, int m, int len, int wid)
 		{1, 1, 1, 1, 1, 1, 1}, // 8
 		{1, 1, 1, 1, 0, 1, 1}  // 9
 	};
-	// Din matrice se verifica ce segmente sunt on pentru fiecare digit
+	// The matrix defines which segments are on for each digit
 
 	if (digit < 0 || digit > 9) {
 		printf("The input given is not a digit.\n");
 		return;
 	}
 
-	// Daca inputul este digit goleste matricea
+	// If the input is a digit, clear the matrix
 	init_matrix(n, m, display);
 
 	int *seg = segments[digit];
@@ -177,14 +177,14 @@ void fill_digit(int digit, int display[][NMAX], int n, int m, int len, int wid)
 			}
 		}
 	}
-	if (seg[5]) { //Segment f
+	if (seg[5]) { // Segment f
 		for (int i = wid; i < wid + len; i++) {
 			for (int j = 0; j < wid; j++) {
 				display[i][j] = 1;
 			}
 		}
 	}
-	if (seg[6]) { //segment g
+	if (seg[6]) { // Segment g
 		int middle = n / 2 - wid / 2;
 		for (int i = middle; i < middle + wid; i++) {
 			for (int j = wid; j < wid + len; j++) {
@@ -210,7 +210,7 @@ int main(void)
 			break;
 		}
 
-		// Pentru fiecare comanda apelez functia aferenta
+		// Call the matching function for each command
 		switch (command) {
 		case 'F': {
 			int digit;
@@ -249,7 +249,7 @@ int main(void)
 		}
 		default:
 			printf("Invalid command.\n");
-			clear_input_buffer(); // Citesc toata linia pentru a curata eroarea
+			clear_input_buffer(); // Read the entire line to clear the error
 			break;
 		}
 	}

@@ -1,7 +1,7 @@
 // Danilov Alexandru-Cristian, 315CA
 #include <stdio.h>
 
-#define NMAX 10000 // numarul maxim de iteme
+#define NMAX 10000 // maximum number of items
 
 void scan_items(int n, long long shields[], long long *hp)
 {
@@ -23,9 +23,9 @@ void scan_items(int n, long long shields[], long long *hp)
 	}
 }
 
-// Elementele heal se aduna la hp.
-// Valoarea elementelor shield este copiata in vectorul shields.
-// Pentru iteme invalide se afiseaza mesajul de eroare.
+// Heal items are added to hp.
+// Shield item values are copied to the shields vector.
+// Invalid items print an error message.
 
 void sort_shields(int n, long long shields[])
 {
@@ -44,7 +44,7 @@ void sort_shields(int n, long long shields[])
 	}
 }
 
-// Elementele din vectorul shields sunt sortate prin selection sort.
+// The elements in the shields vector are sorted with selection sort.
 
 void remove_zeros(int *n, long long shields[])
 {
@@ -60,9 +60,9 @@ void remove_zeros(int *n, long long shields[])
 	*n = new_count;
 }
 
-// Sunt eliminate elementele nule din vectorul shields
-// (adica cele care nu sunt scuturi).
-// Este actualizat n ca sa coincida cu numarul de scuturi.
+// Null elements are removed from the shields vector
+// (meaning the elements that are not shields).
+// n is updated to match the number of shields.
 
 int find_best(long long shields[], int n, long long damage)
 {
@@ -70,7 +70,7 @@ int find_best(long long shields[], int n, long long damage)
 	int right = n - 1;
 	int best_idx = -1;
 
-	// Cautare binara pentru scutul optim
+	// Binary search for the optimal shield
 	while (left <= right) {
 		int mid = left + (right - left) / 2;
 
@@ -86,7 +86,7 @@ int find_best(long long shields[], int n, long long damage)
 		return best_idx;
 	}
 
-	// Cautare binara pentru scutul minim mai mare decât daunele
+	// Binary search for the smallest shield greater than the damage
 	left = 0;
 	right = n - 1;
 	best_idx = -1;
@@ -103,13 +103,13 @@ int find_best(long long shields[], int n, long long damage)
 	}
 
 	return best_idx;
-	// Prin cautare binara se alege scutul optim pentru lupta.
+	// Binary search is used to choose the optimal shield for the fight.
 }
 
 void battle(long long *hp, int *n, long long shields[], long long boss_damage)
 {
 	int best_shield_index = find_best(shields, *n, boss_damage);
-	// Se gaseste scutul optim.
+	// Find the optimal shield.
 	long long used_shield = 0;
 
 	if (best_shield_index != -1) {
@@ -117,17 +117,17 @@ void battle(long long *hp, int *n, long long shields[], long long boss_damage)
 		long long damage_taken = boss_damage - used_shield;
 
 		if (damage_taken < 0) {
-			damage_taken = 0; // Dauna absorbita nu poate fi negativa.
+			damage_taken = 0; // Absorbed damage cannot be negative.
 		}
 
 		*hp -= damage_taken;
 	} else {
 		*hp -= boss_damage;
 	}
-	// Se modifica hp în functie de daunele suferite.
+	// Update hp according to the damage taken.
 
 	if (*hp < 0) {
-		*hp = 0; // hp nu poate avea valoare negativa.
+		*hp = 0; // hp cannot be negative.
 	}
 
 	if (used_shield > 0) {
@@ -135,7 +135,7 @@ void battle(long long *hp, int *n, long long shields[], long long boss_damage)
 	} else {
 		printf("%lld\n", *hp);
 	}
-	// Se afisează hp si scut (daca e cazul) dupa lupta.
+	// Print hp and the shield, if one was used, after the fight.
 
 	if (best_shield_index != -1) {
 		for (int j = best_shield_index; j < *n - 1; j++) {
@@ -143,8 +143,7 @@ void battle(long long *hp, int *n, long long shields[], long long boss_damage)
 		}
 		(*n)--;
 	}
-	// Daca se foloseste un scut, acesta este eliminat
-	// pentru a nu fi folosit din nou.
+	// If a shield is used, remove it so it cannot be used again.
 }
 
 int main(void)
@@ -159,13 +158,13 @@ int main(void)
 	remove_zeros(&n, shields);
 
 	printf("Initial health points: %lld\n", hp);
-	// Se citesc si se prelucreaza datele specifice itemelor.
+	// Read and process the item data.
 
 	int m;
 	scanf("%d", &m);
 	long long boss_damage;
 
-	for (int i = 0; i < m; i++) { // Citesc m bossi.
+	for (int i = 0; i < m; i++) { // Read m bosses.
 		scanf("%lld", &boss_damage);
 
 		if (hp > 0) {
@@ -173,9 +172,9 @@ int main(void)
 		} else {
 			break;
 		}
-		// Daca Gigel este viu, pentru fiecare boss se apeleaza
-		// functia battle care afiseaza rezultatul si modifică hp.
-		// Daca Gigel este mort, se opresc luptele si nu se mai citesc bossi.
+		// If the player is alive, call battle for each boss. The function
+		// prints the result and updates hp. If the player is dead, stop
+		// the fights and stop reading bosses.
 	}
 
 	if (hp > 0) {
@@ -183,7 +182,7 @@ int main(void)
 	} else {
 		printf("You died.\n");
 	}
-	// Se afiseaza mesajul final.
+	// Print the final message.
 
 	return 0;
 }
